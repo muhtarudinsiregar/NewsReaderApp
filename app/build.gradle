@@ -46,4 +46,10 @@ dependencies {
 
     //circle image view
     compile 'de.hdodenhof:circleimageview:2.2.0'
+
+    //picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    /*paper db*/
+    compile 'io.paperdb:paperdb:2.5'
 }
