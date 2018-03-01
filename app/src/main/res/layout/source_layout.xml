@@ -13,14 +13,14 @@
         android:orientation="horizontal"
         android:weightSum="10">
 
-        <!--<de.hdodenhof.circleimageview.CircleImageView-->
-            <!--android:id="@+id/source_image"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="2"-->
-            <!--android:scaleType="center" />-->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/source_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
 
         <TextView
+            android:layout_gravity="center"
             android:id="@+id/source_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
