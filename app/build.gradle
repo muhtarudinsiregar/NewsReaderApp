@@ -30,4 +30,26 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    //package
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    //loading dialog with run dots
+    compile 'com.github.d-max:spots-dialog:0.7@aar'
+
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.2'
+
+    //circle image view
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+
+    //picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    /*paper db*/
+    compile 'io.paperdb:paperdb:2.5'
 }
