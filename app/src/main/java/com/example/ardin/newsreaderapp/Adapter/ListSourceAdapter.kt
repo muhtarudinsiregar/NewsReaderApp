@@ -33,7 +33,6 @@ class ListSourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     }
 
     fun bindData(url: String) {
-//        itemView.source_image.setText(icon.icons.get(0).url)
         Picasso.with(itemView.context).load(url).into(itemView.source_image)
     }
 }
@@ -68,12 +67,11 @@ class ListSourceAdapter(val context: Context, val webSite: WebSite) : RecyclerVi
                 if (result?.icons != null && result?.icons.isNotEmpty()) {
                     holder.bindData(result.icons[0].url)
                 }
-
             }
 
         })
 
-        holder?.itemView.source_name.setText(webSite.sources.get(position).url)
+        holder?.itemView.source_name.text = webSite.sources[position].name
 
         holder.setItemClickListener(object : ItemClickListener {
             override fun onClick(view: View?, position: Int, isLongClick: Boolean) {
