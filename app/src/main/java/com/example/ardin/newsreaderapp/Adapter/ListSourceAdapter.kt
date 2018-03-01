@@ -1,12 +1,14 @@
 package com.example.ardin.newsreaderapp.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.ardin.newsreaderapp.Common.Common
 import com.example.ardin.newsreaderapp.Interface.ItemClickListener
+import com.example.ardin.newsreaderapp.ListNews
 import com.example.ardin.newsreaderapp.Model.IconBetterIdea
 import com.example.ardin.newsreaderapp.Model.WebSite
 import com.example.ardin.newsreaderapp.R
@@ -21,6 +23,10 @@ import retrofit2.Response
  */
 
 class ListSourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    init {
+        itemView.setOnClickListener(this)
+    }
+
     override fun onClick(v: View?) {
         itemClickListener?.onClick(v, adapterPosition, false)
     }
@@ -31,6 +37,7 @@ class ListSourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListener = itemClickListener
     }
+
 
     fun bindData(url: String) {
         Picasso.with(itemView.context).load(url).into(itemView.source_image)
@@ -75,7 +82,16 @@ class ListSourceAdapter(val context: Context, val webSite: WebSite) : RecyclerVi
 
         holder.setItemClickListener(object : ItemClickListener {
             override fun onClick(view: View?, position: Int, isLongClick: Boolean) {
-                super.onClick(view, position, isLongClick)
+                val intent = Intent(context, ListNews::class.java)
+                intent.apply {
+                    val sortBy = webSite.sources[position].sortByAvailable
+
+                    if (sortBy != null) intent.putExtra("sortBy", sortBy[0])
+
+                    intent.putExtra("source", webSite.sources[position].id)
+                }
+
+                context.startActivity(intent)
             }
         })
     }
