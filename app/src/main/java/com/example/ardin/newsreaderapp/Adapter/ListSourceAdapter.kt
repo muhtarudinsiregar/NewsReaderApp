@@ -31,11 +31,16 @@ class ListSourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListener = itemClickListener
     }
+
+    fun bindData(url: String) {
+//        itemView.source_image.setText(icon.icons.get(0).url)
+        Picasso.with(itemView.context).load(url).into(itemView.source_image)
+    }
 }
 
 class ListSourceAdapter(val context: Context, val webSite: WebSite) : RecyclerView.Adapter<ListSourceViewHolder>() {
 
-    val newsService = Common.getIconService();
+    private val newsService = Common.getIconService();
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ListSourceViewHolder {
         val inflater = LayoutInflater.from(parent?.context)
@@ -57,17 +62,18 @@ class ListSourceAdapter(val context: Context, val webSite: WebSite) : RecyclerVi
 
             }
 
-            override fun onResponse(call: Call<IconBetterIdea>?, response: Response<IconBetterIdea>?) {
-                val result = response?.body() as IconBetterIdea
-                if (result.icons.isNotEmpty()) {
-                    Picasso.with(context)
-                            .load(result.icons.get(0).url)
+            override fun onResponse(call: Call<IconBetterIdea>, response: Response<IconBetterIdea>) {
+                val result = response.body()
+
+                if (result?.icons != null && result?.icons.isNotEmpty()) {
+                    holder.bindData(result.icons[0].url)
                 }
+
             }
 
         })
 
-        holder?.itemView.source_name.setText(webSite.sources.get(position).name)
+        holder?.itemView.source_name.setText(webSite.sources.get(position).url)
 
         holder.setItemClickListener(object : ItemClickListener {
             override fun onClick(view: View?, position: Int, isLongClick: Boolean) {
