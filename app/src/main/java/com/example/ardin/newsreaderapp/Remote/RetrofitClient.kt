@@ -8,13 +8,14 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class RetrofitClient {
     companion object {
-        fun getClient(baseUrl: String): Retrofit? {
+        fun getClient(baseUrl: String): Retrofit {
             var retrofit: Retrofit? = null
             if (retrofit == null) {
                 retrofit = Retrofit.Builder()
                         .baseUrl(baseUrl)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build()
+                return retrofit
             }
             return retrofit
         }

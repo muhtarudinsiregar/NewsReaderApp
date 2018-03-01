@@ -6,7 +6,7 @@ package com.example.ardin.newsreaderapp.Model
 data class Icon(
         val url: String,
         val width: Int,
-        val heigh: Int,
+        val height: Int,
         val bytes: Int,
         val format: String,
         val sha1sum: String,
