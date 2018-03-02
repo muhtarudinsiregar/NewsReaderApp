@@ -11,7 +11,7 @@ import com.example.ardin.newsreaderapp.Remote.RetrofitClient
 object Common {
     const val BASE_URL = "https://newsapi.org"
 
-    const val API_KEY = "2f49b9f8b3fc474888e9f02575e4cdd6"
+    const val API_KEY = ""
 
     fun getNewsService(): NewsService {
         return RetrofitClient.getClient(BASE_URL).create(NewsService::class.java)
