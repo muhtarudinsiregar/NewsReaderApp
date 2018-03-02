@@ -44,11 +44,17 @@ class ListNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         var date: Date? = null
         try {
             date = ISO8601Parse.parse(article.publishedAt)
-        } catch (e: ParseException){
+        } catch (e: ParseException) {
             e.printStackTrace()
         }
 
         itemView.article_time.text = date?.time.toString()
+
+        itemView.setOnClickListener {
+            object : ItemClickListener {
+
+            }
+        }
 
     }
 }

@@ -9,16 +9,22 @@ import com.example.ardin.newsreaderapp.Remote.RetrofitClient
  * Created by ardin on 27/02/18.
  */
 object Common {
-    const val BASE_URL = "https://newsapi.org"
-
-    const val API_KEY = ""
-
     fun getNewsService(): NewsService {
-        return RetrofitClient.getClient(BASE_URL).create(NewsService::class.java)
+        return RetrofitClient.getClient(API.BASE_URL).create(NewsService::class.java)
     }
 
     fun getIconService(): IconBetterIdeaService {
         return IconBetterIdeaClient
-                .getClient(BASE_URL).create(IconBetterIdeaService::class.java)
+                .getClient(API.BASE_URL).create(IconBetterIdeaService::class.java)
+    }
+
+    fun getAPIUrl(source: String, sortBy: String?, apiKEY: String): String {
+        val apiUrl = StringBuilder("${API.BASE_URL}/v1/articles?source=")
+        return apiUrl.append(source)
+                .append("&sortBy")
+                .append(sortBy)
+                .append("&apiKey=")
+                .append(apiKEY)
+                .toString()
     }
 }
