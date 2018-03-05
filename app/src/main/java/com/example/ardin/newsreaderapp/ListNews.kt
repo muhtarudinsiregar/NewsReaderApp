@@ -103,18 +103,18 @@ class ListNews : AppCompatActivity() {
                     })
         } else {
             dialog.show()
+
+            //get article
             mService.getNewestArticles(Common.getAPIUrl(source, sortBy, API.KEY))
                     .enqueue(object : Callback<News> {
                         override fun onFailure(call: Call<News>?, t: Throwable?) {
                             dialog.dismiss()
-                            Log.d("ListNews", "gagal")
                         }
 
                         override fun onResponse(call: Call<News>?, response: Response<News>?) {
                             dialog.dismiss()
-                            val result = response?.body()
 
-                            Log.d("ListNews", result.toString())
+                            val result = response?.body()
 
                             Picasso.with(baseContext)
                                     .load(result?.articles?.get(0)?.urlToImage)
@@ -126,7 +126,7 @@ class ListNews : AppCompatActivity() {
                             webHotUrl = result?.articles?.get(0)?.url
 
                             //load remain article
-                            val removeFirstArticle: List<Article> = removeFirstArticle(response?.body()?.articles as MutableList<Article>)
+                            val removeFirstArticle: List<Article> = removeFirstArticle(result?.articles as MutableList<Article>)
 
                             val adapter = ListNewsAdapter(baseContext, removeFirstArticle)
                             adapter.notifyDataSetChanged()

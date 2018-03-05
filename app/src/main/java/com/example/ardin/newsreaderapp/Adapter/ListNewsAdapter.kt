@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.ardin.newsreaderapp.Common.ISO8601Parse
+import com.example.ardin.newsreaderapp.Extension.loadUrl
+import com.example.ardin.newsreaderapp.Extension.wrapTitleIfTooLong
 import com.example.ardin.newsreaderapp.Interface.ItemClickListener
 import com.example.ardin.newsreaderapp.Model.Article
 import com.example.ardin.newsreaderapp.R
@@ -28,18 +30,9 @@ class ListNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
     }
 
     fun bindData(article: Article) {
-        //set image
-        Picasso.with(itemView.context)
-                .load(article.urlToImage)
-                .into(itemView.article_image)
-
-        val title = article.title
-
-        if (title.length > 65) {
-            itemView.article_title.text = "${title.substring(0, 65)}...."
-        } else {
-            itemView.article_title.text = title
-        }
+        //set data using extension function kotlin
+        itemView.article_image.loadUrl(article.urlToImage)
+        itemView.article_title.wrapTitleIfTooLong(article.title)
 
         var date: Date? = null
         try {
