@@ -7,4 +7,5 @@
 /build
 /captures
 .externalNativeBuild
-app/src/main/javan/com/example/ardin/newsreaderapp/Common/Coomon.kt
+/app/src/main/java/com/example/ardin/newsreaderapp/Common/Api.kt
+.idea/
