@@ -2,6 +2,7 @@ package com.example.ardin.newsreaderapp
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -27,8 +28,9 @@ class DetailArticle : AppCompatActivity() {
             }
         }
 
+//        Log.d("DetailArticle", intent.getStringExtra("webURL").isEmpty().toString())
         if (intent != null) {
-            if (intent.getStringExtra("webURL").isEmpty()){
+            if (!intent.getStringExtra("webURL").isEmpty()) {
                 webView.loadUrl(intent.getStringExtra("webURL"))
             }
         }
