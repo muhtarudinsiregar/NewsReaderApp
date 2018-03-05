@@ -3,10 +3,12 @@ package com.example.ardin.newsreaderapp
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import com.example.ardin.newsreaderapp.Adapter.ListNewsAdapter
 import com.example.ardin.newsreaderapp.Common.API
 import com.example.ardin.newsreaderapp.Common.Common
-import com.example.ardin.newsreaderapp.Interface.NewsService
+import com.example.ardin.newsreaderapp.Model.Article
 import com.example.ardin.newsreaderapp.Model.News
 import com.squareup.picasso.Picasso
 import dmax.dialog.SpotsDialog
@@ -21,8 +23,6 @@ class ListNews : AppCompatActivity() {
     private var sortBy: String = "top"
 
     private lateinit var dialog: SpotsDialog
-
-    lateinit var mService: NewsService
 
     private var webHotUrl: String? = ""
 
@@ -42,11 +42,20 @@ class ListNews : AppCompatActivity() {
             startActivity(detail)
         }
 
+        //show remain article
+
+        lstNews.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+        }
+
+
+
         if (intent != null) {
             source = intent.getStringExtra("source")
 //            sortBy = intent.getStringExtra("sortBy")
 
-            if (source != null) {
+            if (source.isNotEmpty()) {
                 loadNews(source, false)
             }
 
@@ -72,6 +81,39 @@ class ListNews : AppCompatActivity() {
                             dialog.dismiss()
                             val result = response?.body()
 
+                            Picasso.with(baseContext)
+                                    .load(result?.articles?.get(0)?.urlToImage)
+                                    .into(top_image)
+
+                            top_title.text = result?.articles?.get(0)?.title
+                            top_author.text = result?.articles?.get(0)?.author
+
+                            webHotUrl = result?.articles?.get(0)?.url
+
+                            //load remain article
+                            val removeFirstArticle = removeFirstArticle(response?.body()?.articles as MutableList<Article>)
+
+                            val adapter = ListNewsAdapter(baseContext, removeFirstArticle)
+                            adapter.notifyDataSetChanged()
+
+                            lstNews.adapter = adapter
+
+                        }
+
+                    })
+        } else {
+            dialog.show()
+            mService.getNewestArticles(Common.getAPIUrl(source, sortBy, API.KEY))
+                    .enqueue(object : Callback<News> {
+                        override fun onFailure(call: Call<News>?, t: Throwable?) {
+                            dialog.dismiss()
+                            Log.d("ListNews", "gagal")
+                        }
+
+                        override fun onResponse(call: Call<News>?, response: Response<News>?) {
+                            dialog.dismiss()
+                            val result = response?.body()
+
                             Log.d("ListNews", result.toString())
 
                             Picasso.with(baseContext)
@@ -82,11 +124,26 @@ class ListNews : AppCompatActivity() {
                             top_author.text = result?.articles?.get(0)?.author
 
                             webHotUrl = result?.articles?.get(0)?.url
+
+                            //load remain article
+                            val removeFirstArticle: List<Article> = removeFirstArticle(response?.body()?.articles as MutableList<Article>)
+
+                            val adapter = ListNewsAdapter(baseContext, removeFirstArticle)
+                            adapter.notifyDataSetChanged()
+
+                            lstNews.adapter = adapter
+
                         }
 
                     })
-        } else {
 
+            swipeRefresh.isRefreshing = false
         }
+    }
+
+    fun removeFirstArticle(result: MutableList<Article>): List<Article> {
+        var removeFirstArticles = result
+        removeFirstArticles.removeAt(0)
+        return removeFirstArticles
     }
 }
