@@ -17,8 +17,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ListNews : AppCompatActivity() {
-    private var source: String? = ""
-    private var sortBy: String? = ""
+    private var source: String = ""
+    private var sortBy: String = "top"
 
     private lateinit var dialog: SpotsDialog
 
@@ -30,12 +30,11 @@ class ListNews : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_news)
 
-        val mService = Common.getNewsService()
         dialog = SpotsDialog(this)
 
-        swipeRefresh.setOnRefreshListener {
-            loadNews(source as String, true)
-        }
+//        swipeRefresh.setOnRefreshListener {
+//            loadNews(source as String, true)
+//        }
 
         diagonaLayout.setOnClickListener {
             val detail = Intent(baseContext, DetailArticle::class.java)
@@ -45,10 +44,10 @@ class ListNews : AppCompatActivity() {
 
         if (intent != null) {
             source = intent.getStringExtra("source")
-            sortBy = intent.getStringExtra("sortBy")
+//            sortBy = intent.getStringExtra("sortBy")
 
-            if (sortBy != null && source != null) {
-                loadNews(source as String, false)
+            if (source != null) {
+                loadNews(source, false)
             }
 
         }
@@ -57,20 +56,27 @@ class ListNews : AppCompatActivity() {
     }
 
     private fun loadNews(source: String, isRefreshed: Boolean) {
+        val mService = Common.getNewsService()
+
         if (!isRefreshed) {
             dialog.show()
+
             mService.getNewestArticles(Common.getAPIUrl(source, sortBy, API.KEY))
                     .enqueue(object : Callback<News> {
                         override fun onFailure(call: Call<News>?, t: Throwable?) {
                             dialog.dismiss()
+                            Log.d("ListNews", "gagal")
                         }
 
                         override fun onResponse(call: Call<News>?, response: Response<News>?) {
                             dialog.dismiss()
                             val result = response?.body()
+
                             Log.d("ListNews", result.toString())
+
                             Picasso.with(baseContext)
                                     .load(result?.articles?.get(0)?.urlToImage)
+                                    .into(top_image)
 
                             top_title.text = result?.articles?.get(0)?.title
                             top_author.text = result?.articles?.get(0)?.author
