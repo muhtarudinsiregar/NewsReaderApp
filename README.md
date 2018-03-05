@@ -4,7 +4,7 @@ Learning android with kotlin using `newsapi.org`.
 ### Use
  - Git clone `https://github.com/muhtarudinsiregar/NewsReaderApp.git`
  - Get your api key here [https://newsapi.org/register](https://newsapi.org/register)
- - Set your api key in file `common/api.kt`
+ - Create file `secrets.properties` in root, or rename `secrets.properties.example` to `secrets.properties` then set api key there
  - Run build
 
 ### To Do
