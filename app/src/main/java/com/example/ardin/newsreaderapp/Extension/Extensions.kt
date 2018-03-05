@@ -2,6 +2,7 @@ package com.example.ardin.newsreaderapp.Extension
 
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.ardin.newsreaderapp.Model.Article
 import com.squareup.picasso.Picasso
 
 
@@ -21,4 +22,11 @@ fun TextView.wrapTitleIfTooLong(title: String) {
             this.text = "$title"
         }
     }
+}
+
+//remove first article, because already as headline
+fun removeFirstArticle(result: MutableList<Article>): List<Article> {
+    var removeFirstArticles = result
+    removeFirstArticles.removeAt(0)
+    return removeFirstArticles
 }
