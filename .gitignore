@@ -7,5 +7,5 @@
 /build
 /captures
 .externalNativeBuild
-/app/src/main/java/com/example/ardin/newsreaderapp/Common/Api.kt
+secrets.properties
 .idea/

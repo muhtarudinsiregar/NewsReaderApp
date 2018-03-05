@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var newsService: NewsService
     lateinit var adapter: ListSourceAdapter
     lateinit var dialog: SpotsDialog
+    lateinit var cache: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,12 +48,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadWebsiteSource(isRefreshed: Boolean) {
-        var cache: String? = null
-
         if (!isRefreshed) {
             cache = Paper.book().read("cache")
 
-            if (cache != null && !cache.isEmpty()) { //if have cache
+            if (!cache.isEmpty()) { //if have cache
                 val website: WebSite = Gson().fromJson(cache, WebSite::class.java)
                 val adapter = ListSourceAdapter(baseContext, website)
 
