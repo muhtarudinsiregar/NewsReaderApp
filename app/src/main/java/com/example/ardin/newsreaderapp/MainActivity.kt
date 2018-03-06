@@ -43,8 +43,15 @@ class MainActivity : AppCompatActivity() {
 
         dialog = SpotsDialog(this)
 
-        loadWebsiteSource(false)
+        checkIfCacheExist()
+    }
 
+    private fun checkIfCacheExist() {
+        var isCacheExist = true
+        if (Paper.book().exist("cache")) isCacheExist = false
+
+
+        loadWebsiteSource(isCacheExist)
     }
 
     private fun loadWebsiteSource(isRefreshed: Boolean) {
@@ -78,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         } else {
+            dialog.show()
 
             newsService.getSources().enqueue(object : Callback<WebSite> {
                 override fun onFailure(call: Call<WebSite>?, t: Throwable?) {
@@ -95,6 +103,7 @@ class MainActivity : AppCompatActivity() {
 
                     //dismiss refresh progressing
                     swipeRefresh.isRefreshing = false
+                    dialog.dismiss()
                 }
 
             })
