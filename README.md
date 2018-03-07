@@ -10,9 +10,9 @@ Learning android with kotlin using `newsapi.org`.
  - Run build
 
 ### To Do
- - Cleanup code
- - Refactor design
- - Need Review
+ * [ ] Cleanup code
+ * [ ] Refactor design
+ * [ ] Need Review
 
 ### Dependency
  - [square.github.io/retrofit/](square.github.io/retrofit/)
