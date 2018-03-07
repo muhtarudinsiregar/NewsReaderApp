@@ -1,6 +1,8 @@
 # NewsReaderApp
 Learning android with kotlin using `newsapi.org`.
 
+<img src="nra.gif" width="320">
+
 ### Use
  - Git clone `https://github.com/muhtarudinsiregar/NewsReaderApp.git`
  - Get your api key here [https://newsapi.org/register](https://newsapi.org/register)
