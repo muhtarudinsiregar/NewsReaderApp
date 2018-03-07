@@ -3,8 +3,6 @@ package com.example.ardin.newsreaderapp
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.example.ardin.newsreaderapp.Adapter.ListSourceAdapter
 import com.example.ardin.newsreaderapp.Common.Common
 import com.example.ardin.newsreaderapp.Interface.NewsService
@@ -21,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var newsService: NewsService
     lateinit var adapter: ListSourceAdapter
     lateinit var dialog: SpotsDialog
-
+    lateinit var cache: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,22 +36,29 @@ class MainActivity : AppCompatActivity() {
         //init service
         newsService = Common.getNewsService()
 
-        list_source.setHasFixedSize(true)
-        list_source.layoutManager = LinearLayoutManager(this)
+        list_source.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
 
         dialog = SpotsDialog(this)
 
-        loadWebsiteSource(false)
+        checkIfCacheExist()
+    }
 
+    private fun checkIfCacheExist() {
+        var isCacheExist = true
+        if (Paper.book().exist("cache")) isCacheExist = false
+
+
+        loadWebsiteSource(isCacheExist)
     }
 
     private fun loadWebsiteSource(isRefreshed: Boolean) {
-        var cache: String? = null
-
         if (!isRefreshed) {
             cache = Paper.book().read("cache")
 
-            if (cache != null && !cache.isEmpty()) { //if have cache
+            if (!cache.isEmpty()) { //if have cache
                 val website: WebSite = Gson().fromJson(cache, WebSite::class.java)
                 val adapter = ListSourceAdapter(baseContext, website)
 
@@ -75,18 +80,16 @@ class MainActivity : AppCompatActivity() {
 
                         //save to cache
                         Paper.book().write("cache", Gson().toJson(response.body()))
-
                     }
-
                 })
-
             }
 
         } else {
+            dialog.show()
 
             newsService.getSources().enqueue(object : Callback<WebSite> {
                 override fun onFailure(call: Call<WebSite>?, t: Throwable?) {
-                    Log.d("MainActivity", "gagal getResources")
+
                 }
 
                 override fun onResponse(call: Call<WebSite>, response: Response<WebSite>) {
@@ -100,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
                     //dismiss refresh progressing
                     swipeRefresh.isRefreshing = false
-
+                    dialog.dismiss()
                 }
 
             })

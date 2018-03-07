@@ -1,15 +1,19 @@
 package com.example.ardin.newsreaderapp.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.ardin.newsreaderapp.Common.ISO8601Parse
+import com.example.ardin.newsreaderapp.DetailArticle
+import com.example.ardin.newsreaderapp.Extension.loadUrl
+import com.example.ardin.newsreaderapp.Extension.wrapTitleIfTooLong
 import com.example.ardin.newsreaderapp.Interface.ItemClickListener
 import com.example.ardin.newsreaderapp.Model.Article
 import com.example.ardin.newsreaderapp.R
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.news_layout.view.*
 import java.text.ParseException
 import java.util.*
@@ -17,29 +21,21 @@ import java.util.*
 
 class ListNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-    lateinit var itemClickListener: ItemClickListener
+
+    private lateinit var itemClickListener: ItemClickListener
 
     init {
         itemView.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        itemClickListener.onClick(v, adapterPosition, false)
+
     }
 
     fun bindData(article: Article) {
-        //set image
-        Picasso.with(itemView.context)
-                .load(article.urlToImage)
-                .into(itemView.article_image)
-
-        val title = article.title
-
-        if (title.length > 65) {
-            itemView.article_title.text = "${title.substring(0, 65)}...."
-        } else {
-            itemView.article_title.text = title
-        }
+        //set data using extension function kotlin
+        itemView.article_image.loadUrl(article.urlToImage)
+        itemView.article_title.wrapTitleIfTooLong(article.title)
 
         var date: Date? = null
         try {
@@ -48,12 +44,12 @@ class ListNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
             e.printStackTrace()
         }
 
-        itemView.article_time.text = date?.time.toString()
+        if (date != null) itemView.article_time.text = date.time.toString()
 
         itemView.setOnClickListener {
-            object : ItemClickListener {
-
-            }
+            val intent = Intent(itemView.context, DetailArticle::class.java)
+            intent.putExtra("webURL", article.url)
+            itemView.context.startActivity(intent)
         }
 
     }
@@ -72,6 +68,7 @@ class ListNewsAdapter(val context: Context, val articleList: List<Article>) : Re
     }
 
     override fun onBindViewHolder(holder: ListNewsViewHolder?, position: Int) {
+        Log.d("ListNewsAdapter", articleList[position].toString())
         holder?.bindData(articleList[position])
     }
 

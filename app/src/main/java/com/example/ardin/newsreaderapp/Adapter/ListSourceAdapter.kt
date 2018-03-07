@@ -7,20 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.ardin.newsreaderapp.Common.Common
+import com.example.ardin.newsreaderapp.Extension.loadUrl
 import com.example.ardin.newsreaderapp.Interface.ItemClickListener
 import com.example.ardin.newsreaderapp.ListNews
+import com.example.ardin.newsreaderapp.Model.Icon
 import com.example.ardin.newsreaderapp.Model.IconBetterIdea
+import com.example.ardin.newsreaderapp.Model.Source
 import com.example.ardin.newsreaderapp.Model.WebSite
 import com.example.ardin.newsreaderapp.R
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.source_layout.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by ardin on 27/02/18.
- */
 
 class ListSourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
     init {
@@ -39,8 +38,12 @@ class ListSourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     }
 
 
-    fun bindData(url: String) {
-        Picasso.with(itemView.context).load(url).into(itemView.source_image)
+    fun bindDataIcon(icon: Icon) {
+        itemView.source_image.loadUrl(icon.url)
+    }
+
+    fun bindDataWebsite(source: Source) {
+        itemView.source_name.text = source.name
     }
 }
 
@@ -60,6 +63,10 @@ class ListSourceAdapter(val context: Context, val webSite: WebSite) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: ListSourceViewHolder, position: Int) {
+        //bind data sources
+        holder.bindDataWebsite(webSite.sources[position])
+
+        //call api to get icon image url
         val iconBetterAPI = StringBuilder("https://besticon-demo.herokuapp.com/allicons.json?url=")
         iconBetterAPI.append(webSite.sources.get(position).url)
 
@@ -72,13 +79,11 @@ class ListSourceAdapter(val context: Context, val webSite: WebSite) : RecyclerVi
                 val result = response.body()
 
                 if (result?.icons != null && result?.icons.isNotEmpty()) {
-                    holder.bindData(result.icons[0].url)
+                    holder.bindDataIcon(result.icons[0])
                 }
             }
 
         })
-
-        holder?.itemView.source_name.text = webSite.sources[position].name
 
         holder.setItemClickListener(object : ItemClickListener {
             override fun onClick(view: View?, position: Int, isLongClick: Boolean) {

@@ -15,10 +15,24 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        buildTypes.each {
+            it.buildConfigField 'String', 'NEWSAPI_KEY', getProps("NEWSAPI_KEY")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+def getProps(String propName) {
+    def propsFile = rootProject.file('secrets.properties')
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        return props[propName]
+    } else {
+        return "";
     }
 }
 
